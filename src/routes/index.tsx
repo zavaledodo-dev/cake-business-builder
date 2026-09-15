@@ -146,6 +146,20 @@ function HomePage() {
 
   const heroSlides = [
     {
+      image: "/cakes/cake-lemon-elderflower.jpg",
+      title: "Lemon Elderflower Tier",
+      badge: "Royal Wedding Botanical",
+      desc: "Bright zesty citrus sponge paired with delicate elderflower blossom buttercream and candied lemon slices.",
+      recipeId: "lemon-elderflower"
+    },
+    {
+      image: "/cakes/cake-red-velvet.jpg",
+      title: "Southern Red Velvet",
+      badge: "Dramatic Crimson Tier",
+      desc: "Striking ruby red sponge with semi-naked cream cheese finish, garden roses and fresh berries.",
+      recipeId: "red-velvet"
+    },
+    {
       image: "/cakes/cake-white-cherry.jpg",
       title: "Classic Vanilla Bean",
       badge: "Timeless White Wedding",
@@ -158,6 +172,20 @@ function HomePage() {
       badge: "Decadent Modern Tier",
       desc: "Rich chocolate fudge sponge layered with peanut butter cups & glossy dark chocolate drip.",
       recipeId: "chocolate-fudge"
+    },
+    {
+      image: "/cakes/cake-almond-raspberry.jpg",
+      title: "Almond Raspberry Wedding Cake",
+      badge: "Artisan 3-Tier Stunner",
+      desc: "Ivory almond buttercream layered with ruby red raspberries, sliced flaked almonds and edible gold leaf.",
+      recipeId: "almond-raspberry"
+    },
+    {
+      image: "/cakes/cake-carrot-cake.jpg",
+      title: "Spiced Countryside Carrot Cake",
+      badge: "Rustic Barn Wedding",
+      desc: "Naturally moist spiced carrot layers with textured cream cheese frosting, cinnamon sticks and toasted pecans.",
+      recipeId: "carrot-cake"
     },
     {
       image: "/cakes/cake-pink-vintage.jpg",
