@@ -23,13 +23,14 @@ interface OrderItem {
   servings: number;
   date: string;
   price: number;
-  status: "Pendente" | "Em Preparo" | "Entregue";
+  status: "Pending Deposit" | "In Preparation" | "Delivered & Setup";
 }
 
 function HomePage() {
   const [activeTab, setActiveTab] = useState<"recipes" | "equipment" | "business" | "progress">("recipes");
   const [selectedRecipeId, setSelectedRecipeId] = useState<string>("vanilla-bean");
-  const [servingMultiplier, setServingMultiplier] = useState<number>(1);
+  const [unitMode, setUnitMode] = useState<"volume" | "weight">("volume");
+  const [tierMultiplier, setTierMultiplier] = useState<number>(1);
   const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>({});
   const [checkedIngredients, setCheckedIngredients] = useState<Record<string, boolean>>({});
   const [checkedEquipment, setCheckedEquipment] = useState<Record<string, boolean>>({});
@@ -39,12 +40,12 @@ function HomePage() {
   const [justLeveledUp, setJustLeveledUp] = useState<string | null>(null);
 
   // Business calculator state
-  const [calcServings, setCalcServings] = useState(30);
+  const [calcServings, setCalcServings] = useState(40);
   const [calcTierType, setCalcTierType] = useState<"simple" | "decorated" | "luxury">("decorated");
   const [calcFlavor, setCalcFlavor] = useState("vanilla-bean");
-  const [calcCostIngredients, setCalcCostIngredients] = useState(150);
-  const [calcHours, setCalcHours] = useState(4);
-  const [calcHourlyRate, setCalcHourlyRate] = useState(50);
+  const [calcCostIngredients, setCalcCostIngredients] = useState(120);
+  const [calcHours, setCalcHours] = useState(6);
+  const [calcHourlyRate, setCalcHourlyRate] = useState(35);
   const [calcProfitMargin, setCalcProfitMargin] = useState(30);
 
   // Tasting Box simulator state
@@ -59,12 +60,12 @@ function HomePage() {
       return stored ? JSON.parse(stored) : [
         {
           id: "ord-1",
-          clientName: "Mariana & Carlos",
-          recipeName: "Bolo de Baunilha Clássico",
-          servings: 50,
-          date: "2026-10-15",
-          price: 450,
-          status: "Em Preparo"
+          clientName: "Emily & Jason's Botanical Wedding",
+          recipeName: "Lemon Elderflower Cake",
+          servings: 65,
+          date: "2026-11-20",
+          price: 520,
+          status: "In Preparation"
         }
       ];
     } catch {
@@ -74,9 +75,9 @@ function HomePage() {
 
   const [newClientName, setNewClientName] = useState("");
   const [newOrderRecipe, setNewOrderRecipe] = useState("vanilla-bean");
-  const [newOrderServings, setNewOrderServings] = useState(25);
+  const [newOrderServings, setNewOrderServings] = useState(30);
   const [newOrderDate, setNewOrderDate] = useState("");
-  const [newOrderPrice, setNewOrderPrice] = useState(200);
+  const [newOrderPrice, setNewOrderPrice] = useState(240);
 
   // Sync state
   useEffect(() => {
@@ -102,7 +103,7 @@ function HomePage() {
     const res = completeRecipe(currentRecipe.id);
     setGameState(res.newState);
     if (res.leveledUp) {
-      setJustLeveledUp(`Parabéns! Subiste para o Nível ${res.newState.level} - ${getLevelForXp(res.newState.xp).name}! 🎉`);
+      setJustLeveledUp(`Level Up! You attained Level ${res.newState.level} — ${getLevelForXp(res.newState.xp).name}! 🏆`);
       setTimeout(() => setJustLeveledUp(null), 5000);
     }
   };
@@ -114,11 +115,11 @@ function HomePage() {
     const newOrd: OrderItem = {
       id: "ord-" + Date.now(),
       clientName: newClientName,
-      recipeName: recipeObj?.name || "Bolo Personalizado",
+      recipeName: recipeObj?.name || "Custom Wedding Cake",
       servings: Number(newOrderServings),
-      date: newOrderDate || "Data a combinar",
+      date: newOrderDate || "TBD with Client",
       price: Number(newOrderPrice),
-      status: "Pendente"
+      status: "Pending Deposit"
     };
     const updated = [newOrd, ...orders];
     setOrders(updated);
@@ -142,48 +143,48 @@ function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf8f5] text-slate-800 pb-20">
+    <div className="min-h-screen bg-[#faf8f5] text-slate-800 pb-24 selection:bg-pink-100 selection:text-pink-900">
       {/* Toast Alert */}
       {justLeveledUp && (
-        <div className="fixed top-20 right-4 z-50 bg-gradient-to-r from-pink-500 to-amber-500 text-white px-6 py-3 rounded-2xl shadow-xl flex items-center gap-3 animate-bounce">
+        <div className="fixed top-20 right-4 z-50 bg-gradient-to-r from-pink-600 to-amber-500 text-white px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 animate-bounce border border-white/20">
           <span className="text-2xl">🏆</span>
           <p className="font-bold text-sm sm:text-base">{justLeveledUp}</p>
         </div>
       )}
 
       {/* Hero Header */}
-      <header className="relative overflow-hidden bg-gradient-to-b from-pink-100/60 via-amber-50/50 to-transparent pt-10 pb-12 px-4 sm:px-6">
+      <header className="relative overflow-hidden bg-gradient-to-b from-pink-100/60 via-amber-50/40 to-transparent pt-12 pb-10 px-4 sm:px-6 border-b border-rose-100/60">
         <div className="mx-auto max-w-5xl text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-100 text-pink-700 text-xs font-semibold mb-4 border border-pink-200">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-pink-100/80 text-pink-800 text-xs font-bold mb-4 border border-pink-200">
             <span>✨ The Home Baker's Wedding Cake Collection</span>
             <span>•</span>
-            <span>App Interativo</span>
+            <span>Interactive Business Suite</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 leading-tight">
-            Transforma a Tua Confeitaria num{" "}
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-tight">
+            Launch Your Home-Based{" "}
             <span className="bg-gradient-to-r from-pink-600 via-rose-500 to-amber-500 bg-clip-text text-transparent">
-              Negócio de Casamento
+              Wedding Cake Business
             </span>
           </h1>
-          <p className="mt-4 text-sm sm:text-lg text-slate-600 max-w-2xl mx-auto">
-            Guia prático para confeitarias caseiras: 8 receitas testadas, checklist de equipamentos profissionais, calculadora de porções e simulador de caixa de degustação.
+          <p className="mt-4 text-sm sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            8 foolproof, commercial-grade wedding recipes organized step-by-step, plus a tiered cake scaling tool, kitchen setup checklist, and per-slice wedding pricing engine.
           </p>
 
           {/* Quick Stats Bar */}
-          <div className="mt-8 max-w-2xl mx-auto bg-white/90 backdrop-blur border border-rose-100 rounded-3xl p-4 shadow-sm">
-            <div className="flex items-center justify-between gap-4 mb-2">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">👩‍🍳</span>
+          <div className="mt-8 max-w-2xl mx-auto bg-white/95 backdrop-blur border border-rose-100 rounded-3xl p-4 sm:p-5 shadow-sm">
+            <div className="flex items-center justify-between gap-4 mb-2.5">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl p-1.5 rounded-2xl bg-pink-50 border border-pink-100">👩‍🍳</span>
                 <div className="text-left">
-                  <div className="text-xs text-slate-500 font-medium">Nível Atual</div>
-                  <div className="font-bold text-sm sm:text-base text-slate-800">
-                    {currentLevel.level}. {currentLevel.name}
+                  <div className="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Current Standing</div>
+                  <div className="font-black text-sm sm:text-base text-slate-800">
+                    Level {currentLevel.level} • {currentLevel.name}
                   </div>
                 </div>
               </div>
               <div className="text-right">
-                <span className="text-xs font-bold text-pink-600 bg-pink-50 px-2.5 py-1 rounded-full border border-pink-100">
-                  {gameState.completedRecipes.length} de 8 Receitas Feitas
+                <span className="text-xs font-bold text-pink-600 bg-pink-50 px-3 py-1 rounded-full border border-pink-100">
+                  {gameState.completedRecipes.length} of 8 Flavors Mastered
                 </span>
               </div>
             </div>
@@ -191,61 +192,65 @@ function HomePage() {
           </div>
 
           {/* Main Navigation Tabs */}
-          <div className="mt-8 flex flex-wrap justify-center gap-2">
+          <div className="mt-8 flex flex-wrap justify-center gap-2.5">
             <button
               onClick={() => setActiveTab("recipes")}
-              className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all flex items-center gap-2 ${
+              className={`px-5 py-2.5 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
                 activeTab === "recipes"
                   ? "bg-slate-900 text-white shadow-md scale-105"
                   : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
               }`}
             >
-              <span>🧁</span> 8 Receitas & Camadas
+              <span>🧁</span> 8 Wedding Recipes
             </button>
             <button
               onClick={() => setActiveTab("equipment")}
-              className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all flex items-center gap-2 ${
+              className={`px-5 py-2.5 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
                 activeTab === "equipment"
                   ? "bg-rose-600 text-white shadow-md scale-105"
                   : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
               }`}
             >
-              <span>🛠️</span> Equipamentos & Cozinha
+              <span>🛠️</span> Equipment & Kitchen Setup
             </button>
             <button
               onClick={() => setActiveTab("business")}
-              className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all flex items-center gap-2 ${
+              className={`px-5 py-2.5 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
                 activeTab === "business"
                   ? "bg-pink-600 text-white shadow-md scale-105"
                   : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
               }`}
             >
-              <span>💼</span> Negócio & Degustações
+              <span>💼</span> Pricing Engine & Orders
             </button>
             <button
               onClick={() => setActiveTab("progress")}
-              className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all flex items-center gap-2 ${
+              className={`px-5 py-2.5 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
                 activeTab === "progress"
                   ? "bg-amber-500 text-white shadow-md scale-105"
                   : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
               }`}
             >
-              <span>🏆</span> Conquistas & XP
+              <span>🏆</span> Badges & Level Progress
             </button>
           </div>
         </div>
       </header>
 
-      {/* Main Content Area */}
-      <main className="mx-auto max-w-6xl px-4 sm:px-6 mt-4">
-        {/* TAB 1: RECIPES */}
+      {/* Main Content Body */}
+      <main className="mx-auto max-w-6xl px-4 sm:px-6 mt-8">
+        {/* TAB 1: 8 RECIPES */}
         {activeTab === "recipes" && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Sidebar with recipe list */}
+            {/* Left Column: Recipe Selector */}
             <div className="lg:col-span-4 space-y-3">
-              <h2 className="text-xs font-black uppercase tracking-wider text-slate-400 px-1">
-                Catálogo de Bolos ({recipes.length})
-              </h2>
+              <div className="flex items-center justify-between px-1 mb-2">
+                <h2 className="text-xs font-black uppercase tracking-wider text-slate-400">
+                  Flavor Collection ({recipes.length})
+                </h2>
+                <span className="text-[11px] text-pink-600 font-bold">Tested & Scalable</span>
+              </div>
+              
               <div className="space-y-2">
                 {recipes.map((recipe, index) => {
                   const isDone = gameState.completedRecipes.includes(recipe.id);
@@ -255,12 +260,12 @@ function HomePage() {
                       key={recipe.id}
                       onClick={() => {
                         setSelectedRecipeId(recipe.id);
-                        setServingMultiplier(1);
+                        setTierMultiplier(1);
                       }}
                       className={`w-full text-left p-3.5 rounded-2xl border transition-all flex items-center justify-between ${
                         isSelected
                           ? "bg-white border-pink-500 shadow-md ring-2 ring-pink-500/20"
-                          : "bg-white/80 border-slate-200/80 hover:bg-white hover:border-slate-300"
+                          : "bg-white/90 border-slate-200/80 hover:bg-white hover:border-slate-300"
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -268,18 +273,18 @@ function HomePage() {
                           {recipe.emoji}
                         </span>
                         <div>
-                          <div className="font-bold text-sm text-slate-800 flex items-center gap-1.5">
-                            <span>{index + 1}. {recipe.name}</span>
+                          <div className="font-bold text-sm text-slate-900 leading-snug">
+                            {index + 1}. {recipe.name}
                           </div>
-                          <div className="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
-                            <span>⏱️ {recipe.prepTime}</span>
+                          <div className="text-[11px] text-slate-400 flex items-center gap-2 mt-0.5 font-medium">
+                            <span>⏱️ {recipe.bakeTime}</span>
                             <span>•</span>
                             <span>⭐ {recipe.difficulty}</span>
                           </div>
                         </div>
                       </div>
                       {isDone ? (
-                        <span className="h-6 w-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-black">
+                        <span className="h-6 w-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-black">
                           ✓
                         </span>
                       ) : (
@@ -292,122 +297,154 @@ function HomePage() {
                 })}
               </div>
 
-              {/* Tiered Cakes Advice Card */}
-              <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 text-amber-900 text-xs leading-relaxed mt-4">
-                <div className="font-bold flex items-center gap-1.5 text-amber-800 mb-1">
-                  <span>💡</span> Montagem de Bolos em Andares (Tiered Cakes)
+              {/* Tiered Cakes Note Callout */}
+              <div className="p-4 rounded-2xl bg-amber-50/90 border border-amber-200/80 text-amber-900 text-xs leading-relaxed mt-4 shadow-sm">
+                <div className="font-bold flex items-center gap-1.5 text-amber-900 mb-1">
+                  <span>💡</span> Professional Tier Stacking Note
                 </div>
-                Todas as receitas do livro são para forma de 20cm (2 camadas, 16 fatias). Para casamentos de 2 ou 3 andares, use os multiplicadores acima (1x, 2x, 3x) e insira **dowels** (estacas) de madeira ou plástico rígido no andar de baixo para sustentar o peso sem esmagar o bolo!
+                Every recipe is formulated for an 8-inch round layer cake (16 slices). When scaling up for 2-tier or 3-tier weddings, use the multiplier buttons above and <strong>always install food-safe support dowels</strong> in the lower tier before stacking!
               </div>
             </div>
 
-            {/* Recipe Details Main Column */}
+            {/* Right Column: Active Recipe Details */}
             <div className="lg:col-span-8 bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-6">
+              {/* Header */}
+              <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-100 pb-6">
                 <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-4xl">{currentRecipe.emoji}</span>
-                    <div>
-                      <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
-                        {currentRecipe.name}
-                      </h2>
-                      <p className="text-sm text-slate-500 mt-1">
-                        {currentRecipe.description}
-                      </p>
-                    </div>
+                  <div className="inline-block px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[11px] font-bold mb-2">
+                    {currentRecipe.tagline}
                   </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-4xl">{currentRecipe.emoji}</span>
+                    <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
+                      {currentRecipe.name}
+                    </h2>
+                  </div>
+                  <p className="text-sm text-slate-500 mt-2 max-w-xl">
+                    {currentRecipe.description}
+                  </p>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div>
                   {isRecipeCompleted ? (
-                    <div className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-2xl font-bold text-sm flex items-center gap-2">
-                      <span>🎉</span> Concluída! (+{currentRecipe.xpReward} XP)
+                    <div className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-2xl font-bold text-xs sm:text-sm flex items-center gap-2">
+                      <span>🎉</span> Completed (+{currentRecipe.xpReward} XP)
                     </div>
                   ) : (
                     <button
                       onClick={handleCompleteCurrentRecipe}
-                      className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold px-5 py-2.5 rounded-2xl shadow-sm text-sm flex items-center gap-2 transition-transform active:scale-95"
+                      className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold px-4 sm:px-5 py-2.5 rounded-2xl shadow-sm text-xs sm:text-sm flex items-center gap-2 transition-transform active:scale-95"
                     >
-                      <span>🔥</span> Marcar Como Feita (+{currentRecipe.xpReward} XP)
+                      <span>🔥</span> Mark as Baked (+{currentRecipe.xpReward} XP)
                     </button>
                   )}
                 </div>
               </div>
 
-              {/* Recipe Meta Info & Multiplier */}
+              {/* Meta Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6">
                 <div className="bg-slate-50 border border-slate-100 p-3 rounded-2xl text-center">
-                  <div className="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Rendimento Base</div>
-                  <div className="font-black text-slate-800 text-sm mt-0.5">{currentRecipe.servings * servingMultiplier} Fatias</div>
+                  <div className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Servings</div>
+                  <div className="font-black text-slate-800 text-sm mt-0.5">
+                    {currentRecipe.servings * tierMultiplier} Slices
+                  </div>
                 </div>
                 <div className="bg-slate-50 border border-slate-100 p-3 rounded-2xl text-center">
-                  <div className="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Preparo</div>
+                  <div className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Prep Time</div>
                   <div className="font-black text-slate-800 text-sm mt-0.5">{currentRecipe.prepTime}</div>
                 </div>
                 <div className="bg-slate-50 border border-slate-100 p-3 rounded-2xl text-center">
-                  <div className="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Forno</div>
+                  <div className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Oven & Time</div>
                   <div className="font-black text-slate-800 text-sm mt-0.5">{currentRecipe.bakeTime}</div>
                 </div>
                 <div className="bg-slate-50 border border-slate-100 p-3 rounded-2xl text-center">
-                  <div className="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Dificuldade</div>
+                  <div className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Difficulty</div>
                   <div className="font-black text-slate-800 text-sm mt-0.5">{currentRecipe.difficulty}</div>
                 </div>
               </div>
 
-              {/* Multiplier Selector */}
-              <div className="flex items-center justify-between bg-pink-50/60 border border-pink-100 p-3 rounded-2xl mb-6">
+              {/* Controls Bar: Units Toggle & Multiplier */}
+              <div className="flex flex-wrap items-center justify-between gap-3 bg-pink-50/60 border border-pink-100 p-3.5 rounded-2xl mb-6">
                 <div className="flex items-center gap-2">
-                  <span className="text-xl">📏</span>
-                  <span className="text-xs font-bold text-slate-700">Multiplicador de Andares / Proporção:</span>
+                  <span className="text-xs font-bold text-slate-700">Display Units:</span>
+                  <div className="flex bg-white rounded-lg border border-pink-200 p-0.5">
+                    <button
+                      onClick={() => setUnitMode("volume")}
+                      className={`px-2.5 py-1 rounded-md text-xs font-bold transition ${
+                        unitMode === "volume" ? "bg-pink-500 text-white" : "text-slate-600 hover:text-slate-900"
+                      }`}
+                    >
+                      Cups / Tbsp
+                    </button>
+                    <button
+                      onClick={() => setUnitMode("weight")}
+                      className={`px-2.5 py-1 rounded-md text-xs font-bold transition ${
+                        unitMode === "weight" ? "bg-pink-500 text-white" : "text-slate-600 hover:text-slate-900"
+                      }`}
+                    >
+                      Grams (Scale)
+                    </button>
+                  </div>
                 </div>
-                <div className="flex gap-1.5">
+
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-slate-700">Scale Tier:</span>
                   {[1, 1.5, 2, 3].map((mult) => (
                     <button
                       key={mult}
-                      onClick={() => setServingMultiplier(mult)}
-                      className={`px-3 py-1 rounded-xl text-xs font-bold transition ${
-                        servingMultiplier === mult
-                          ? "bg-pink-500 text-white shadow-sm"
-                          : "bg-white text-slate-600 hover:bg-pink-100"
+                      onClick={() => setTierMultiplier(mult)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition ${
+                        tierMultiplier === mult
+                          ? "bg-slate-900 text-white"
+                          : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
                       }`}
                     >
-                      {mult}x ({mult === 1 ? "20cm" : mult === 2 ? "2 andares" : "3 andares"})
+                      {mult}x
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Business Tip Highlight */}
+              {/* Business Tip Box */}
               <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/80 p-4 rounded-2xl mb-8">
                 <div className="flex items-start gap-3">
                   <span className="text-2xl">💰</span>
                   <div>
-                    <h3 className="font-bold text-amber-900 text-sm">Dica de Negócio & Venda (Do Livro)</h3>
+                    <h3 className="font-bold text-amber-900 text-xs sm:text-sm">Wedding Business & Sales Strategy</h3>
                     <p className="text-xs sm:text-sm text-amber-800/90 mt-1 leading-relaxed">
                       {currentRecipe.businessTip}
                     </p>
+                    <div className="mt-2 text-[11px] text-amber-700 font-semibold flex items-center gap-1">
+                      <span>✨ Recommended Pairings:</span> {currentRecipe.pairingSuggestions.join(" • ")}
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Ingredients Checklist */}
               <div className="mb-8">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                    <span>🥣</span> Ingredientes ({servingMultiplier > 1 ? `Proporção ${servingMultiplier}x` : "Receita Padrão"})
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
+                    <span>🥣</span> Measured Ingredients ({tierMultiplier > 1 ? `${tierMultiplier}x Scaled` : "Base 8-inch Cake"})
                   </h3>
-                  <span className="text-xs text-slate-400">Clique para dar check</span>
+                  <span className="text-[11px] text-slate-400">Click to check off</span>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {currentRecipe.sections.map((section, sIdx) => (
                     <div key={sIdx} className="bg-slate-50/70 border border-slate-200/60 rounded-2xl p-4">
-                      <h4 className="font-bold text-xs uppercase tracking-wider text-slate-600 mb-3">
+                      <h4 className="font-bold text-xs uppercase tracking-wider text-slate-600 mb-3 border-b border-slate-200 pb-1.5">
                         {section.title}
                       </h4>
                       <ul className="space-y-2">
                         {section.ingredients.map((ing, iIdx) => {
                           const key = `${currentRecipe.id}-${sIdx}-${iIdx}`;
                           const isChecked = !!checkedIngredients[key];
+                          const displayAmount = unitMode === "weight" && ing.weightGrams
+                            ? `${Math.round(ing.weightGrams * tierMultiplier)}g`
+                            : tierMultiplier > 1
+                              ? `${ing.amount} (x${tierMultiplier})`
+                              : ing.amount;
+
                           return (
                             <li
                               key={iIdx}
@@ -424,12 +461,7 @@ function HomePage() {
                               />
                               <div>
                                 <span className="font-semibold text-slate-900">{ing.name}</span>:{" "}
-                                <span className="text-pink-600 font-medium">{ing.amount}</span>
-                                {servingMultiplier > 1 && (
-                                  <span className="text-[10px] text-slate-400 ml-1.5 font-bold">
-                                    [x{servingMultiplier}]
-                                  </span>
-                                )}
+                                <span className="text-pink-600 font-bold">{displayAmount}</span>
                               </div>
                             </li>
                           );
@@ -440,10 +472,10 @@ function HomePage() {
                 </div>
               </div>
 
-              {/* Step-by-Step Instructions */}
+              {/* Step-by-Step Instructions by Phase */}
               <div>
-                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2 mb-4">
-                  <span>👩‍🍳</span> Modo de Preparo Passo a Passo
+                <h3 className="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2 mb-3">
+                  <span>👩‍🍳</span> Step-by-Step Production Roadmap
                 </h3>
                 <div className="space-y-3">
                   {currentRecipe.steps.map((step, idx) => {
@@ -453,7 +485,7 @@ function HomePage() {
                       <div
                         key={idx}
                         onClick={() => setCompletedSteps(prev => ({ ...prev, [stepKey]: !isStepDone }))}
-                        className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-start gap-4 ${
+                        className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-start gap-3.5 ${
                           isStepDone
                             ? "bg-slate-50/50 border-slate-200 text-slate-400"
                             : "bg-white border-slate-200 hover:border-pink-300 text-slate-700"
@@ -464,9 +496,19 @@ function HomePage() {
                         }`}>
                           {isStepDone ? "✓" : idx + 1}
                         </span>
-                        <p className={`text-xs sm:text-sm leading-relaxed ${isStepDone ? "line-through" : ""}`}>
-                          {step}
-                        </p>
+                        <div className="flex-1">
+                          <div className="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">
+                            {step.phase}
+                          </div>
+                          <p className={`text-xs sm:text-sm leading-relaxed ${isStepDone ? "line-through" : ""}`}>
+                            {step.instruction}
+                          </p>
+                          {step.proTip && !isStepDone && (
+                            <div className="mt-2 text-[11px] text-pink-700 bg-pink-50 border border-pink-100/80 rounded-lg p-2 font-medium">
+                              💡 <strong>Pro Tip:</strong> {step.proTip}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     );
                   })}
@@ -479,15 +521,14 @@ function HomePage() {
         {/* TAB 2: EQUIPMENT & KITCHEN HABITS */}
         {activeTab === "equipment" && (
           <div className="space-y-8">
-            {/* Essential Equipment Checklist */}
             <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
               <div className="border-b border-slate-100 pb-4 mb-6">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">🛠️</span>
                   <div>
-                    <h2 className="text-xl font-bold text-slate-900">Equipamentos Essenciais para Casamentos</h2>
+                    <h2 className="text-xl font-bold text-slate-900">Essential Equipment for Wedding Cakes</h2>
                     <p className="text-xs text-slate-500">
-                      Não precisas de uma cozinha industrial, mas estas ferramentas chave garantem consistência e estabilidade nos andares.
+                      You don't need a commercial kitchen to build wedding tiers, but these specific tools guarantee structural stability and smooth edges.
                     </p>
                   </div>
                 </div>
@@ -513,7 +554,7 @@ function HomePage() {
                         <div className="flex items-center justify-between">
                           <h3 className="font-bold text-sm text-slate-800">{item.name}</h3>
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                            item.importance === "Essencial" ? "bg-rose-100 text-rose-700" : "bg-blue-100 text-blue-700"
+                            item.importance === "Essential" ? "bg-rose-100 text-rose-700" : "bg-blue-100 text-blue-700"
                           }`}>
                             {item.importance}
                           </span>
@@ -522,7 +563,7 @@ function HomePage() {
                           {item.description}
                         </p>
                         <div className="text-[11px] text-pink-700 font-medium bg-white/80 border border-pink-100 rounded-lg p-1.5 mt-2">
-                          💡 <strong>Dica Prática:</strong> {item.practicalTip}
+                          💡 <strong>Kitchen Tip:</strong> {item.practicalTip}
                         </div>
                       </div>
                     </div>
@@ -536,14 +577,14 @@ function HomePage() {
               <div className="flex items-center gap-3 mb-6">
                 <span className="text-3xl">🎯</span>
                 <div>
-                  <h3 className="text-lg font-bold text-amber-950">Hábitos de Cozinha que Separam Amadoras de Profissionais</h3>
-                  <p className="text-xs text-amber-800/80">Diretrizes do manual para evitar imprevistos no grande dia.</p>
+                  <h3 className="text-lg font-bold text-amber-950">Kitchen Habits That Separate Amateurs From Dependable Businesses</h3>
+                  <p className="text-xs text-amber-800/80">Standards from the ebook to prevent disasters on delivery morning.</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {kitchenHabits.map((habit) => (
-                  <div key={habit.id} className="bg-white/80 backdrop-blur border border-amber-100 rounded-2xl p-4">
+                  <div key={habit.id} className="bg-white/90 backdrop-blur border border-amber-100 rounded-2xl p-4">
                     <div className="flex items-center gap-2 font-bold text-slate-900 text-sm mb-1.5">
                       <span className="text-xl">{habit.emoji}</span>
                       <h4>{habit.title}</h4>
@@ -558,7 +599,7 @@ function HomePage() {
           </div>
         )}
 
-        {/* TAB 3: BUSINESS & TASTING BOX */}
+        {/* TAB 3: BUSINESS & PRICING ENGINE */}
         {activeTab === "business" && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Price Calculator */}
@@ -567,9 +608,9 @@ function HomePage() {
                 <div className="flex items-center gap-3 border-b border-slate-100 pb-4 mb-6">
                   <span className="text-3xl">🧮</span>
                   <div>
-                    <h2 className="text-xl font-bold text-slate-900">Calculadora de Preço de Bolo de Casamento</h2>
+                    <h2 className="text-xl font-bold text-slate-900">Wedding Cake Pricing Calculator</h2>
                     <p className="text-xs text-slate-500">
-                      Defina o preço correto por fatia com base no padrão do ebook ($4 a $12 por fatia).
+                      Standard industry formula based on servings ($4 to $12/slice) and real production costs.
                     </p>
                   </div>
                 </div>
@@ -578,8 +619,8 @@ function HomePage() {
                   {/* Servings slider */}
                   <div>
                     <div className="flex justify-between items-center text-sm font-semibold mb-2">
-                      <label>Número Estimado de Fatias / Convidados</label>
-                      <span className="text-pink-600 font-bold text-base">{calcServings} fatias</span>
+                      <label>Guest Count / Wedding Servings</label>
+                      <span className="text-pink-600 font-bold text-base">{calcServings} slices</span>
                     </div>
                     <input
                       type="range"
@@ -594,20 +635,20 @@ function HomePage() {
                       className="w-full accent-pink-500"
                     />
                     <div className="flex justify-between text-[11px] text-slate-400 mt-1">
-                      <span>15 (1 andar pequeno)</span>
-                      <span>100 (3 andares)</span>
-                      <span>200 (casamento grande)</span>
+                      <span>15 (Small 1-Tier)</span>
+                      <span>80 (2-Tier Standard)</span>
+                      <span>150+ (3-Tier Grand Wedding)</span>
                     </div>
                   </div>
 
                   {/* Flavor & Style */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-slate-600 uppercase mb-2">Sabor do Bolo</label>
+                      <label className="block text-xs font-bold text-slate-600 uppercase mb-2">Cake Flavor</label>
                       <select
                         value={calcFlavor}
                         onChange={(e) => setCalcFlavor(e.target.value)}
-                        className="w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 text-sm font-medium focus:ring-2 focus:ring-pink-400"
+                        className="w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-pink-400"
                       >
                         {recipes.map(r => (
                           <option key={r.id} value={r.id}>
@@ -618,27 +659,27 @@ function HomePage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-600 uppercase mb-2">Complexidade / Decoração</label>
+                      <label className="block text-xs font-bold text-slate-600 uppercase mb-2">Decoration Tier</label>
                       <select
                         value={calcTierType}
                         onChange={(e) => setCalcTierType(e.target.value as any)}
-                        className="w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 text-sm font-medium focus:ring-2 focus:ring-pink-400"
+                        className="w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-pink-400"
                       >
-                        <option value="simple">Simples / Semi-naked ($6/fatia)</option>
-                        <option value="decorated">Decorado / Flores Naturais ($8/fatia)</option>
-                        <option value="luxury">Luxo / Andares Múltiplos ($12/fatia)</option>
+                        <option value="simple">Semi-Naked / Minimal Buttercream ($6/slice)</option>
+                        <option value="decorated">Floral Buttercream / Textured Finish ($8/slice)</option>
+                        <option value="luxury">Multi-Tier Luxury with Fondant/Gold Leaf ($12/slice)</option>
                       </select>
                     </div>
                   </div>
 
-                  {/* Advanced Cost Inputs */}
+                  {/* Real Cost Engine */}
                   <div className="pt-4 border-t border-slate-100">
                     <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
-                      Cálculo Detalhado de Custos Reais
+                      Production Cost Reality Check
                     </h3>
                     <div className="grid grid-cols-3 gap-3">
                       <div>
-                        <label className="text-[11px] font-bold text-slate-500">Ingredientes ($)</label>
+                        <label className="text-[11px] font-bold text-slate-500">Ingredients ($)</label>
                         <input
                           type="number"
                           value={calcCostIngredients}
@@ -647,7 +688,7 @@ function HomePage() {
                         />
                       </div>
                       <div>
-                        <label className="text-[11px] font-bold text-slate-500">Horas Produção</label>
+                        <label className="text-[11px] font-bold text-slate-500">Labor Hours</label>
                         <input
                           type="number"
                           value={calcHours}
@@ -656,7 +697,7 @@ function HomePage() {
                         />
                       </div>
                       <div>
-                        <label className="text-[11px] font-bold text-slate-500">Sua Hora ($)</label>
+                        <label className="text-[11px] font-bold text-slate-500">Hourly Rate ($)</label>
                         <input
                           type="number"
                           value={calcHourlyRate}
@@ -667,30 +708,30 @@ function HomePage() {
                     </div>
                   </div>
 
-                  {/* Price Output Box */}
+                  {/* Output Display */}
                   <div className="p-5 rounded-2xl bg-gradient-to-br from-pink-50 via-rose-50 to-amber-50 border border-pink-200 mt-6">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                       <div>
                         <span className="text-xs font-bold text-pink-700 uppercase tracking-wider">
-                          Preço Recomendado por Fatia
+                          Recommended Price Per Serving
                         </span>
                         <div className="text-3xl font-black text-slate-900 mt-1">
-                          ${suggestedSlicePrice} <span className="text-xs font-normal text-slate-500">/ fatia</span>
+                          ${suggestedSlicePrice} <span className="text-xs font-normal text-slate-500">/ slice</span>
                         </div>
                         <p className="text-xs text-slate-500 mt-1">
-                          Total Sugerido: <strong className="text-slate-800">${baseTotal.toFixed(2)}</strong>
+                          Contract Total: <strong className="text-slate-800">${baseTotal.toFixed(2)}</strong>
                         </p>
                       </div>
 
                       <div className="sm:border-l sm:border-pink-200 sm:pl-6">
                         <span className="text-xs font-bold text-amber-800 uppercase tracking-wider">
-                          Com Margem de Produção
+                          Cost-Plus Margin Total
                         </span>
                         <div className="text-2xl font-bold text-amber-900 mt-1">
                           ${costBasedTotal}
                         </div>
                         <span className="text-[11px] text-slate-500">
-                          Cobre ingredientes, suas {calcHours}h de produção + {calcProfitMargin}% lucro
+                          Covers raw goods, {calcHours}h baking time + {calcProfitMargin}% profit
                         </span>
                       </div>
                     </div>
@@ -703,9 +744,9 @@ function HomePage() {
                 <div className="flex items-center gap-3 border-b border-slate-100 pb-4 mb-4">
                   <span className="text-3xl">🎁</span>
                   <div>
-                    <h3 className="font-bold text-slate-900 text-base">Simulador de Tasting Box (Caixa de Degustação)</h3>
+                    <h3 className="font-bold text-slate-900 text-base">Client Tasting Box Simulator</h3>
                     <p className="text-xs text-slate-500">
-                      O ebook recomenda oferecer uma caixa com 2 a 3 sabores para fechar contratos com noivos.
+                      Offer a curated 3-flavor tasting box to win over couples before they sign their wedding contract.
                     </p>
                   </div>
                 </div>
@@ -733,10 +774,10 @@ function HomePage() {
 
                   <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/70 text-xs text-amber-900 flex justify-between items-center">
                     <div>
-                      <span className="font-bold">Estratégia Recomendada:</span> Trio infalível com 1 clássico (Baunilha), 1 de chocolate e 1 sabor especial (Champanhe ou Limão).
+                      <span className="font-bold">Ebook Strategy:</span> Classic Vanilla + Rich Chocolate + One Specialty Flavor (Champagne or Lemon).
                     </div>
                     <div className="text-right pl-4">
-                      <div className="text-[10px] uppercase font-bold text-amber-700">Preço da Caixa</div>
+                      <div className="text-[10px] uppercase font-bold text-amber-700">Tasting Box Fee</div>
                       <div className="text-lg font-black text-amber-950">${tastingBoxPrice}</div>
                     </div>
                   </div>
@@ -749,17 +790,17 @@ function HomePage() {
               <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-sm">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-2xl">📝</span>
-                  <h3 className="font-bold text-slate-900 text-base">Nova Encomenda de Noivos</h3>
+                  <h3 className="font-bold text-slate-900 text-base">Log New Wedding Booking</h3>
                 </div>
 
                 <form onSubmit={handleAddOrder} className="space-y-3">
                   <div>
                     <input
                       type="text"
-                      placeholder="Nome dos Noivos / Cliente"
+                      placeholder="Couple's Names (e.g., Sarah & Mike)"
                       value={newClientName}
                       onChange={(e) => setNewClientName(e.target.value)}
-                      className="w-full text-sm p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
+                      className="w-full text-xs sm:text-sm p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
                       required
                     />
                   </div>
@@ -775,7 +816,7 @@ function HomePage() {
                     </select>
                     <input
                       type="number"
-                      placeholder="Nº Fatias"
+                      placeholder="Servings"
                       value={newOrderServings}
                       onChange={(e) => setNewOrderServings(Number(e.target.value))}
                       className="text-xs p-2 bg-slate-50 border border-slate-200 rounded-xl"
@@ -790,7 +831,7 @@ function HomePage() {
                     />
                     <input
                       type="number"
-                      placeholder="Preço Total ($)"
+                      placeholder="Price ($)"
                       value={newOrderPrice}
                       onChange={(e) => setNewOrderPrice(Number(e.target.value))}
                       className="text-xs p-2 bg-slate-50 border border-slate-200 rounded-xl"
@@ -800,7 +841,7 @@ function HomePage() {
                     type="submit"
                     className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs transition"
                   >
-                    Salvar Encomenda (+30 XP)
+                    Save Booking (+30 XP)
                   </button>
                 </form>
               </div>
@@ -809,21 +850,21 @@ function HomePage() {
               <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-sm">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                    <span>📦</span> Encomendas Registadas ({orders.length})
+                    <span>📦</span> Active Client Orders ({orders.length})
                   </h3>
                 </div>
 
                 <div className="space-y-3">
                   {orders.length === 0 ? (
                     <p className="text-xs text-slate-400 text-center py-6">
-                      Nenhuma encomenda cadastrada ainda. Adicione a sua primeira no formulário acima!
+                      No client bookings logged yet. Add your first booking above!
                     </p>
                   ) : (
                     orders.map(ord => (
                       <div key={ord.id} className="p-3 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between">
                         <div>
                           <div className="font-bold text-xs text-slate-800">{ord.clientName}</div>
-                          <div className="text-[11px] text-slate-500">{ord.recipeName} • {ord.servings} fatias</div>
+                          <div className="text-[11px] text-slate-500">{ord.recipeName} • {ord.servings} slices</div>
                           <div className="text-[10px] text-slate-400 mt-0.5">📅 {ord.date}</div>
                         </div>
                         <div className="text-right">
@@ -844,24 +885,23 @@ function HomePage() {
         {/* TAB 4: GAMIFICATION & PROGRESS */}
         {activeTab === "progress" && (
           <div className="space-y-8">
-            {/* Level Card */}
             <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 rounded-3xl p-8 text-white shadow-lg">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
                 <div>
                   <div className="inline-block bg-white/20 backdrop-blur px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
-                    Jornada Confeiteira
+                    Baker Career Roadmap
                   </div>
                   <h2 className="text-3xl sm:text-4xl font-black">
-                    Nível {currentLevel.level}: {currentLevel.name}
+                    Level {currentLevel.level}: {currentLevel.name}
                   </h2>
                   <p className="mt-2 text-white/90 text-sm max-w-md">
-                    Continue a testar as receitas, calcular orçamentos e adicionar encomendas para atingir o topo como Mestre Confeiteira!
+                    Test recipes, calibrate slice pricing, and log wedding bookings to advance from Apprentice to Master Wedding Cake Artist!
                   </p>
                 </div>
                 <div className="text-left sm:text-right bg-black/20 p-4 rounded-2xl backdrop-blur">
-                  <div className="text-3xl font-black">{gameState.xp} <span className="text-sm font-normal">XP Total</span></div>
+                  <div className="text-3xl font-black">{gameState.xp} <span className="text-sm font-normal">Total XP</span></div>
                   <div className="text-xs text-white/80 mt-1">
-                    Próximo nível a partir de: {currentLevel.maxXp === Infinity ? "Nível Máximo!" : `${currentLevel.maxXp + 1} XP`}
+                    Next milestone: {currentLevel.maxXp === Infinity ? "Peak Level!" : `${currentLevel.maxXp + 1} XP`}
                   </div>
                 </div>
               </div>
@@ -873,7 +913,7 @@ function HomePage() {
             {/* Achievements Grid */}
             <div>
               <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <span>🏅</span> Badges e Conquistas ({gameState.unlockedAchievements.length} de {achievements.length} Desbloqueados)
+                <span>🏅</span> Badges & Milestones ({gameState.unlockedAchievements.length} of {achievements.length} Unlocked)
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {achievements.map((ach) => {

@@ -1,7 +1,7 @@
 export interface EquipmentItem {
   id: string;
   name: string;
-  importance: "Essencial" | "Recomendado" | "Profissional";
+  importance: "Essential" | "Recommended" | "Pro Level";
   emoji: string;
   description: string;
   practicalTip: string;
@@ -17,85 +17,85 @@ export interface KitchenHabit {
 export const equipmentList: EquipmentItem[] = [
   {
     id: "stand-mixer",
-    name: "Batedeira Planetária",
-    importance: "Essencial",
+    name: "Heavy-Duty Stand Mixer",
+    importance: "Essential",
     emoji: "🥣",
-    description: "Uma batedeira de mão aguenta pequenos bolos, mas a planetária economiza horas em encomendas grandes e massas densas.",
-    practicalTip: "Use o batedor tipo pá para bater a manteiga com o açúcar até atingir aeração ideal."
+    description: "A hand mixer can handle single batches, but a 5-quart or 6-quart stand mixer saves hours on tiered wedding cakes and thick Italian or American buttercreams.",
+    practicalTip: "Use the paddle attachment for creaming butter and sugar to incorporate micro-air pockets without over-whipping."
   },
   {
     id: "cake-pans",
-    name: "Formas Redondas (15cm, 20cm e 25cm)",
-    importance: "Essencial",
+    name: "Round Cake Pans (6\", 8\", and 10\")",
+    importance: "Essential",
     emoji: "🥧",
-    description: "Conjunto em pelo menos 3 tamanhos essenciais para bolos de andares proporcionais e estáveis.",
-    practicalTip: "Formas de alumínio anodizado de fundo fixo ou falso garantem assamento uniforme sem queimar as bordas."
+    description: "Straight-sided, anodized aluminum pans in at least 3 sizes to produce proportional, level tiered cakes.",
+    practicalTip: "Choose straight 2-inch or 3-inch deep pans with no slope for sharp 90-degree corners."
   },
   {
     id: "digital-scale",
-    name: "Balança Digital de Cozinha",
-    importance: "Essencial",
+    name: "Digital Kitchen Gram Scale",
+    importance: "Essential",
     emoji: "⚖️",
-    description: "Pesar os ingredientes em gramas garante resultados idênticos em todas as fornadas, ao contrário de xícaras.",
-    practicalTip: "A precisão da balança evita que um andar fique mais seco ou pesado que outro."
+    description: "Weighing in grams delivers 100% consistent flavor, crumb, and rise from tier to tier, unlike measuring cups.",
+    practicalTip: "Weigh your filled pans before baking to make sure both layers bake at the exact same rate."
   },
   {
     id: "spatula-scraper",
-    name: "Espátula Angular & Raspador (Bench Scraper)",
-    importance: "Essencial",
+    name: "Offset Spatula & Bench Scraper",
+    importance: "Essential",
     emoji: "📐",
-    description: "Ferramentas chave para alisar o buttercream com precisão milimétrica e cantos retos.",
-    practicalTip: "Aqueça levemente o raspador em água quente para o acabamento final espelhado no buttercream."
+    description: "The dynamic duo required for pristine crumb coats and laser-straight buttercream edges.",
+    practicalTip: "Warm your stainless steel bench scraper under hot water and wipe dry right before the final spin for a flawless glass finish."
   },
   {
     id: "turntable",
-    name: "Bailarina Giratória Profissional",
-    importance: "Essencial",
+    name: "Cast Aluminum Revolving Turntable",
+    importance: "Essential",
     emoji: "🔄",
-    description: "A base giratória com rolamento suave permite decorar o bolo continuamente sem trepidações.",
-    practicalTip: "Prefira modelos de ferro fundido ou alumínio com peso suficiente para não deslizar na bancada."
+    description: "A heavy-bearing turntable provides continuous smooth spin without wobbling while piping and smoothing.",
+    practicalTip: "Place a silicone non-slip mat underneath your cake board so it never slides during piping."
   },
   {
     id: "dowels-boards",
-    name: "Boards de Bolo & Estacas/Dowels",
-    importance: "Essencial",
+    name: "Cardboard Cake Drums & Wooden/Plastic Dowels",
+    importance: "Essential",
     emoji: "🏗️",
-    description: "A estrutura interna de sustentação que impede o andar superior de esmagar o bolo de baixo.",
-    practicalTip: "Sempre insira pelo menos 4 a 5 estacas de sustentação em cada andar antes de colocar o seguinte."
+    description: "The internal engineering framework that supports hundreds of ounces without compressing the bottom sponge.",
+    practicalTip: "Insert at least 4 dowels inside the perimeter of the tier above, cut flush with the top surface."
   },
   {
     id: "oven-thermometer",
-    name: "Termômetro de Forno",
-    importance: "Recomendado",
+    name: "Independent Oven Thermometer",
+    importance: "Recommended",
     emoji: "🌡️",
-    description: "A maioria dos fornos caseiros oscila entre 10°C e 25°C acima ou abaixo da temperatura mostrada no botão.",
-    practicalTip: "Posicione o termômetro no centro da grelha onde a forma vai assar para regular a temperatura real."
+    description: "Most household ovens drift between 15°F and 35°F away from their dial settings.",
+    practicalTip: "Hang the thermometer right in the center of the middle rack where your cake pans sit."
   }
 ];
 
 export const kitchenHabits: KitchenHabit[] = [
   {
     id: "habit-weight",
-    title: "Pese Sempre os Ingredientes",
+    title: "Always Weigh by Grams",
     emoji: "⚖️",
-    description: "Bolos de casamento exigem textura uniforme de andar para andar. 1 xícara de farinha pode variar até 30g dependendo de como for medida."
+    description: "Wedding tiers must have identical density. A single cup of flour can swing by 30 grams depending on humidity and scooping technique."
   },
   {
     id: "habit-test",
-    title: "Faça um Bolo de Teste Completo",
+    title: "Bake a Full Test Cake First",
     emoji: "🔬",
-    description: "Teste sabor, estabilidade do miolo e sobreposição em andares antes de oferecer qualquer novo sabor no cardápio aos noivos."
+    description: "Never test a new flavor on a paying couple. Bake, fill, chill, and stack a prototype before adding it to your contract menu."
   },
   {
     id: "habit-cards",
-    title: "Fichas Técnicas Padronizadas",
+    title: "Maintain Standard Recipe Cards",
     emoji: "📋",
-    description: "Tenha uma ficha detalhada para cada receita com quantidades exatas, tempos de forno e observações de umidade."
+    description: "Keep written records of exact gram weights, bake times, internal cake temperatures, and notes on how flavors hold up in heat."
   },
   {
     id: "habit-legal",
-    title: "Regulamentação e Boas Práticas",
+    title: "Check Cottage Food Regulations",
     emoji: "📜",
-    description: "Verifique as diretrizes locais de manipulação higiênica e rotulagem para alimentos caseiros comercializados."
+    description: "Review local cottage food guidelines regarding shelf-stable frostings (cream cheese vs. meringue buttercream) and label disclosures."
   }
 ];

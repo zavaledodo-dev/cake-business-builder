@@ -16,18 +16,18 @@ export function XPBar({ xp, showLabel = true, size = "md" }: XPBarProps) {
   return (
     <div className="w-full">
       {showLabel && (
-        <div className="mb-1 flex justify-between text-xs font-medium text-gray-600">
-          <span>
-            ⭐ Nível {level.level} — {level.name}
+        <div className="mb-1.5 flex justify-between text-xs font-semibold text-slate-600">
+          <span className="flex items-center gap-1.5">
+            <span>⭐</span> Level {level.level} — <span className="text-slate-900">{level.name}</span>
           </span>
-          <span>
-            {xp} XP{nextLevel ? ` / ${nextLevel} XP` : " (Máx!)"}
+          <span className="text-slate-500 font-medium">
+            {xp} XP{nextLevel ? ` / ${nextLevel} XP` : " (Max Level Achieved!)"}
           </span>
         </div>
       )}
-      <div className={`w-full ${heights[size]} rounded-full bg-gray-200 overflow-hidden`}>
+      <div className={`w-full ${heights[size]} rounded-full bg-slate-200/80 overflow-hidden shadow-inner`}>
         <div
-          className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-700"
+          className="h-full rounded-full bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 transition-all duration-700"
           style={{ width: `${progress}%` }}
         />
       </div>

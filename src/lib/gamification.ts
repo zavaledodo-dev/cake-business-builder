@@ -12,16 +12,16 @@ export interface GameState {
 }
 
 export const LEVELS = [
-  { level: 1, name: "Aprendiz", minXp: 0, maxXp: 99 },
-  { level: 2, name: "Ajudante de Baker", minXp: 100, maxXp: 199 },
-  { level: 3, name: "Baker Iniciante", minXp: 200, maxXp: 299 },
-  { level: 4, name: "Baker Confiante", minXp: 300, maxXp: 399 },
-  { level: 5, name: "Baker Profissional", minXp: 400, maxXp: 499 },
-  { level: 6, name: "Baker Especialista", minXp: 500, maxXp: 649 },
-  { level: 7, name: "Confeiteira", minXp: 650, maxXp: 799 },
-  { level: 8, name: "Confeiteira Sénior", minXp: 800, maxXp: 999 },
-  { level: 9, name: "Mestre Baker", minXp: 1000, maxXp: 1249 },
-  { level: 10, name: "Mestre Confeiteira", minXp: 1250, maxXp: Infinity },
+  { level: 1, name: "Apprentice Baker", minXp: 0, maxXp: 99 },
+  { level: 2, name: "Kitchen Assistant", minXp: 100, maxXp: 199 },
+  { level: 3, name: "Junior Baker", minXp: 200, maxXp: 299 },
+  { level: 4, name: "Confident Baker", minXp: 300, maxXp: 399 },
+  { level: 5, name: "Professional Baker", minXp: 400, maxXp: 499 },
+  { level: 6, name: "Pastry Specialist", minXp: 500, maxXp: 649 },
+  { level: 7, name: "Tiered Cake Artisan", minXp: 650, maxXp: 799 },
+  { level: 8, name: "Senior Cake Designer", minXp: 800, maxXp: 999 },
+  { level: 9, name: "Master Baker", minXp: 1000, maxXp: 1249 },
+  { level: 10, name: "Master Wedding Cake Artist", minXp: 1250, maxXp: Infinity },
 ];
 
 const STORAGE_KEY = "cake-builder-game-state";
@@ -33,7 +33,7 @@ const defaultState: GameState = {
   unlockedAchievements: [],
   orderCount: 0,
   calculatorUseCount: 0,
-  bakerName: "Baker",
+  bakerName: "Home Baker",
 };
 
 export function getGameState(): GameState {
@@ -180,9 +180,4 @@ function checkAndUnlockAchievements(state: GameState): string[] {
     if (unlocked) newlyUnlocked.push(ach.id);
   }
   return newlyUnlocked;
-}
-
-export function setBakerName(name: string): void {
-  const state = getGameState();
-  saveGameState({ ...state, bakerName: name });
 }

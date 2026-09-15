@@ -18,7 +18,7 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+        <h2 className="mt-4 text-xl font-semibold text-foreground">Page Not Found</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
         </p>
@@ -27,7 +27,7 @@ function NotFoundComponent() {
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Go home
+            Back to Home
           </Link>
         </div>
       </div>
@@ -46,10 +46,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+          Something went wrong
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          An error occurred while loading this view. You can try refreshing or head back home.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -59,13 +59,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Try again
+            Try Again
           </button>
           <a
             href="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Go home
+            Back to Home
           </a>
         </div>
       </div>
@@ -78,11 +78,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Cake Business Builder" },
-      { name: "description", content: "Transforme a sua paixão por bolos num negócio rentável com receitas e ferramentas gamificadas." },
+      { title: "Cake Business Builder — Wedding Cake Recipes & Pricing" },
+      { name: "description", content: "8 Tested Wedding Cake Recipes, Kitchen Setup Checklist, and Per-Slice Pricing Calculator for Home Bakers." },
       { name: "author", content: "Cake Business Builder" },
       { property: "og:title", content: "Cake Business Builder" },
-      { property: "og:description", content: "8 Receitas e Ferramentas Práticas para Confeitaria de Casamento" },
+      { property: "og:description", content: "8 Easy, Elegant Wedding Cake Recipes to Launch Your Home-Based Business" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -102,7 +102,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt">
+    <html lang="en">
       <head>
         <HeadContent />
       </head>
