@@ -13,6 +13,7 @@ export interface Recipe {
   id: string;
   name: string;
   emoji: string;
+  image?: string;
   color: string;
   colorLight: string;
   tagline: string;
@@ -42,6 +43,7 @@ export const recipes: Recipe[] = [
     id: "vanilla-bean",
     name: "Classic Vanilla Bean Wedding Cake",
     emoji: "🍰",
+    image: "/cakes/cake-white-cherry.jpg",
     color: "#f59e0b",
     colorLight: "#fef3c7",
     tagline: "The #1 Most Requested Wedding Cake Flavor",
@@ -130,6 +132,7 @@ export const recipes: Recipe[] = [
     id: "chocolate-fudge",
     name: "Rich Chocolate Fudge Cake",
     emoji: "🍫",
+    image: "/cakes/cake-chocolate-drip.jpg",
     color: "#92400e",
     colorLight: "#fef3c7",
     tagline: "Ultra-Moist & Reliable For Make-Ahead Wedding Week Prep",
@@ -446,6 +449,7 @@ export const recipes: Recipe[] = [
     id: "champagne",
     name: "Sparkling Champagne Cake",
     emoji: "🥂",
+    image: "/cakes/cake-pink-vintage.jpg",
     color: "#7c3aed",
     colorLight: "#ede9fe",
     tagline: "Delicate, Luxurious & Infused With Real Sparkling Wine",
@@ -519,6 +523,7 @@ export const recipes: Recipe[] = [
     id: "funfetti",
     name: "Festive Funfetti Wedding Cake",
     emoji: "🎉",
+    image: "/cakes/cake-blue-sprinkles.jpg",
     color: "#db2777",
     colorLight: "#fce7f3",
     tagline: "Playful, Colorful & Highly Popular For Rehearsal Dinners",

@@ -142,8 +142,59 @@ function HomePage() {
     }
   };
 
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+
+  const heroSlides = [
+    {
+      image: "/cakes/cake-white-cherry.jpg",
+      title: "Classic Vanilla Bean",
+      badge: "Timeless White Wedding",
+      desc: "Delicate vanilla bean sponge crowned with maraschino cherries & velvety white buttercream.",
+      recipeId: "vanilla-bean"
+    },
+    {
+      image: "/cakes/cake-chocolate-drip.jpg",
+      title: "Chocolate Ganache Drip",
+      badge: "Decadent Modern Tier",
+      desc: "Rich chocolate fudge sponge layered with peanut butter cups & glossy dark chocolate drip.",
+      recipeId: "chocolate-fudge"
+    },
+    {
+      image: "/cakes/cake-pink-vintage.jpg",
+      title: "Vintage Ribbon Tier",
+      badge: "Romantic Lambeth Style",
+      desc: "Sparkling Champagne sponge adorned with delicate satin ribbons & edible royal icing pearls.",
+      recipeId: "champagne"
+    },
+    {
+      image: "/cakes/cake-blue-sprinkles.jpg",
+      title: "Celebration Confetti",
+      badge: "Crowd-Pleasing Favorite",
+      desc: "Festive funfetti crumb paired with bright sky-blue rosette piping & rainbow crunch.",
+      recipeId: "funfetti"
+    }
+  ];
+
+  // Auto-play hero slides every 5 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlideIndex((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [heroSlides.length]);
+
   return (
-    <div className="min-h-screen bg-[#faf8f5] text-slate-800 pb-24 selection:bg-pink-100 selection:text-pink-900">
+    <div className="min-h-screen relative text-slate-800 pb-24 selection:bg-pink-100 selection:text-pink-900">
+      {/* Dynamic Background Image Layer */}
+      <div 
+        className="fixed inset-0 pointer-events-none transition-all duration-1000 ease-in-out bg-cover bg-center opacity-[0.07] blur-sm -z-10"
+        style={{
+          backgroundImage: `url('${heroSlides[currentSlideIndex].image}')`
+        }}
+      />
+      {/* Background Soft Gradient Wash */}
+      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-[#faf8f5]/90 via-[#fffdfa]/95 to-[#faf8f5] -z-10" />
+
       {/* Toast Alert */}
       {justLeveledUp && (
         <div className="fixed top-20 right-4 z-50 bg-gradient-to-r from-pink-600 to-amber-500 text-white px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 animate-bounce border border-white/20">
@@ -152,26 +203,112 @@ function HomePage() {
         </div>
       )}
 
-      {/* Hero Header */}
-      <header className="relative overflow-hidden bg-gradient-to-b from-pink-100/60 via-amber-50/40 to-transparent pt-12 pb-10 px-4 sm:px-6 border-b border-rose-100/60">
-        <div className="mx-auto max-w-5xl text-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-pink-100/80 text-pink-800 text-xs font-bold mb-4 border border-pink-200">
-            <span>✨ The Home Baker's Wedding Cake Collection</span>
-            <span>•</span>
-            <span>Interactive Business Suite</span>
+      {/* Hero Header with Interactive Carousel */}
+      <header className="relative overflow-hidden pt-10 pb-12 px-4 sm:px-6 border-b border-rose-100/60">
+        <div className="mx-auto max-w-6xl">
+          {/* Top Title Bar */}
+          <div className="text-center max-w-3xl mx-auto mb-8">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-pink-100/80 text-pink-800 text-xs font-bold mb-3 border border-pink-200">
+              <span>✨ The Home Baker's Wedding Cake Collection</span>
+              <span>•</span>
+              <span>Visual Showcase</span>
+            </div>
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-tight">
+              Launch Your Home-Based{" "}
+              <span className="bg-gradient-to-r from-pink-600 via-rose-500 to-amber-500 bg-clip-text text-transparent">
+                Wedding Cake Business
+              </span>
+            </h1>
+            <p className="mt-3 text-sm sm:text-base text-slate-600">
+              Transform tested recipes into a thriving business with step-by-step masterclasses, batch scaling, and pricing tools.
+            </p>
           </div>
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-tight">
-            Launch Your Home-Based{" "}
-            <span className="bg-gradient-to-r from-pink-600 via-rose-500 to-amber-500 bg-clip-text text-transparent">
-              Wedding Cake Business
-            </span>
-          </h1>
-          <p className="mt-4 text-sm sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            8 foolproof, commercial-grade wedding recipes organized step-by-step, plus a tiered cake scaling tool, kitchen setup checklist, and per-slice wedding pricing engine.
-          </p>
+
+          {/* Interactive Hero Cake Slide Showcase */}
+          <div className="relative mx-auto max-w-4xl rounded-3xl overflow-hidden shadow-2xl border border-rose-100/80 bg-slate-900 text-white mb-10 group">
+            <div className="relative h-72 sm:h-96 w-full overflow-hidden">
+              {heroSlides.map((slide, sIdx) => {
+                const isActive = sIdx === currentSlideIndex;
+                return (
+                  <div
+                    key={slide.title}
+                    className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                      isActive ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+                    }`}
+                  >
+                    <img
+                      src={slide.image}
+                      alt={slide.title}
+                      className="w-full h-full object-cover object-center transform scale-105 transition-transform duration-7000 group-hover:scale-110"
+                    />
+                    {/* Gradient Overlay for Readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+
+                    {/* Slide Content Caption */}
+                    <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                      <div>
+                        <span className="inline-block px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-pink-500/90 text-white mb-2 shadow-sm">
+                          {slide.badge}
+                        </span>
+                        <h3 className="text-2xl sm:text-4xl font-black tracking-tight text-white drop-shadow-md">
+                          {slide.title}
+                        </h3>
+                        <p className="text-xs sm:text-sm text-slate-200 mt-1 max-w-lg leading-relaxed">
+                          {slide.desc}
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          setSelectedRecipeId(slide.recipeId);
+                          setActiveTab("recipes");
+                        }}
+                        className="self-start sm:self-auto px-5 py-2.5 rounded-full bg-white text-slate-900 hover:bg-pink-100 font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-1.5 active:scale-95"
+                      >
+                        <span>View Recipe</span>
+                        <span>→</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Navigation Arrows */}
+            <button
+              onClick={() => setCurrentSlideIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/40 backdrop-blur hover:bg-black/70 text-white flex items-center justify-center font-bold transition text-lg"
+              aria-label="Previous Slide"
+            >
+              ‹
+            </button>
+            <button
+              onClick={() => setCurrentSlideIndex((prev) => (prev + 1) % heroSlides.length)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/40 backdrop-blur hover:bg-black/70 text-white flex items-center justify-center font-bold transition text-lg"
+              aria-label="Next Slide"
+            >
+              ›
+            </button>
+
+            {/* Indicators Dots */}
+            <div className="absolute top-4 right-4 z-20 flex gap-2">
+              {heroSlides.map((_, dotIdx) => (
+                <button
+                  key={dotIdx}
+                  onClick={() => setCurrentSlideIndex(dotIdx)}
+                  className={`h-2.5 rounded-full transition-all ${
+                    dotIdx === currentSlideIndex
+                      ? "w-8 bg-pink-500 shadow-md"
+                      : "w-2.5 bg-white/50 hover:bg-white"
+                  }`}
+                  aria-label={`Slide ${dotIdx + 1}`}
+                />
+              ))}
+            </div>
+          </div>
 
           {/* Quick Stats Bar */}
-          <div className="mt-8 max-w-2xl mx-auto bg-white/95 backdrop-blur border border-rose-100 rounded-3xl p-4 sm:p-5 shadow-sm">
+          <div className="max-w-2xl mx-auto bg-white/95 backdrop-blur border border-rose-100 rounded-3xl p-4 sm:p-5 shadow-sm">
             <div className="flex items-center justify-between gap-4 mb-2.5">
               <div className="flex items-center gap-3">
                 <span className="text-3xl p-1.5 rounded-2xl bg-pink-50 border border-pink-100">👩‍🍳</span>
@@ -262,16 +399,24 @@ function HomePage() {
                         setSelectedRecipeId(recipe.id);
                         setTierMultiplier(1);
                       }}
-                      className={`w-full text-left p-3.5 rounded-2xl border transition-all flex items-center justify-between ${
+                      className={`w-full text-left p-3 rounded-2xl border transition-all flex items-center justify-between ${
                         isSelected
                           ? "bg-white border-pink-500 shadow-md ring-2 ring-pink-500/20"
                           : "bg-white/90 border-slate-200/80 hover:bg-white hover:border-slate-300"
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-2xl p-2 rounded-xl bg-slate-50 border border-slate-100">
-                          {recipe.emoji}
-                        </span>
+                        {recipe.image ? (
+                          <img
+                            src={recipe.image}
+                            alt={recipe.name}
+                            className="w-11 h-11 rounded-xl object-cover border border-rose-100 shadow-sm flex-shrink-0"
+                          />
+                        ) : (
+                          <span className="text-2xl p-2 rounded-xl bg-slate-50 border border-slate-100 flex-shrink-0">
+                            {recipe.emoji}
+                          </span>
+                        )}
                         <div>
                           <div className="font-bold text-sm text-slate-900 leading-snug">
                             {index + 1}. {recipe.name}
@@ -308,6 +453,22 @@ function HomePage() {
 
             {/* Right Column: Active Recipe Details */}
             <div className="lg:col-span-8 bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
+              {/* Optional Recipe Real Cake Photo Banner */}
+              {currentRecipe.image && (
+                <div className="relative w-full h-56 sm:h-72 rounded-2xl overflow-hidden mb-6 border border-rose-100 shadow-sm">
+                  <img
+                    src={currentRecipe.image}
+                    alt={currentRecipe.name}
+                    className="w-full h-full object-cover object-center"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-4">
+                    <span className="text-white text-xs font-bold bg-pink-600/90 px-3 py-1 rounded-full backdrop-blur">
+                      Real Baker Presentation Sample
+                    </span>
+                  </div>
+                </div>
+              )}
+
               {/* Header */}
               <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-100 pb-6">
                 <div>
