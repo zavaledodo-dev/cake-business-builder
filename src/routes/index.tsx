@@ -11,6 +11,7 @@ import {
   registerCalculatorUse,
 } from "../lib/gamification";
 import { XPBar } from "../components/XPBar";
+import { PricingEngine } from "../components/PricingEngine";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -790,146 +791,14 @@ function HomePage() {
 
         {/* TAB 3: BUSINESS & PRICING ENGINE */}
         {activeTab === "business" && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Price Calculator */}
-            <div className="lg:col-span-7 space-y-6">
-              <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
-                <div className="flex items-center gap-3 border-b border-slate-100 pb-4 mb-6">
-                  <span className="text-3xl">🧮</span>
-                  <div>
-                    <h2 className="text-xl font-bold text-slate-900">Wedding Cake Pricing Calculator</h2>
-                    <p className="text-xs text-slate-500">
-                      Standard industry formula based on servings ($4 to $12/slice) and real production costs.
-                    </p>
-                  </div>
-                </div>
+          <div className="space-y-8">
+            {/* Full-featured Per-Slice & Cost-Plus Pricing Engine */}
+            <PricingEngine />
 
-                <div className="space-y-5">
-                  {/* Servings slider */}
-                  <div>
-                    <div className="flex justify-between items-center text-sm font-semibold mb-2">
-                      <label>Guest Count / Wedding Servings</label>
-                      <span className="text-pink-600 font-bold text-base">{calcServings} slices</span>
-                    </div>
-                    <input
-                      type="range"
-                      min="15"
-                      max="200"
-                      step="5"
-                      value={calcServings}
-                      onChange={(e) => {
-                        setCalcServings(Number(e.target.value));
-                        registerCalculatorUse();
-                      }}
-                      className="w-full accent-pink-500"
-                    />
-                    <div className="flex justify-between text-[11px] text-slate-400 mt-1">
-                      <span>15 (Small 1-Tier)</span>
-                      <span>80 (2-Tier Standard)</span>
-                      <span>150+ (3-Tier Grand Wedding)</span>
-                    </div>
-                  </div>
-
-                  {/* Flavor & Style */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-600 uppercase mb-2">Cake Flavor</label>
-                      <select
-                        value={calcFlavor}
-                        onChange={(e) => setCalcFlavor(e.target.value)}
-                        className="w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-pink-400"
-                      >
-                        {recipes.map(r => (
-                          <option key={r.id} value={r.id}>
-                            {r.emoji} {r.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-600 uppercase mb-2">Decoration Tier</label>
-                      <select
-                        value={calcTierType}
-                        onChange={(e) => setCalcTierType(e.target.value as any)}
-                        className="w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-pink-400"
-                      >
-                        <option value="simple">Semi-Naked / Minimal Buttercream ($6/slice)</option>
-                        <option value="decorated">Floral Buttercream / Textured Finish ($8/slice)</option>
-                        <option value="luxury">Multi-Tier Luxury with Fondant/Gold Leaf ($12/slice)</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Real Cost Engine */}
-                  <div className="pt-4 border-t border-slate-100">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
-                      Production Cost Reality Check
-                    </h3>
-                    <div className="grid grid-cols-3 gap-3">
-                      <div>
-                        <label className="text-[11px] font-bold text-slate-500">Ingredients ($)</label>
-                        <input
-                          type="number"
-                          value={calcCostIngredients}
-                          onChange={(e) => setCalcCostIngredients(Number(e.target.value))}
-                          className="w-full mt-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-[11px] font-bold text-slate-500">Labor Hours</label>
-                        <input
-                          type="number"
-                          value={calcHours}
-                          onChange={(e) => setCalcHours(Number(e.target.value))}
-                          className="w-full mt-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-[11px] font-bold text-slate-500">Hourly Rate ($)</label>
-                        <input
-                          type="number"
-                          value={calcHourlyRate}
-                          onChange={(e) => setCalcHourlyRate(Number(e.target.value))}
-                          className="w-full mt-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Output Display */}
-                  <div className="p-5 rounded-2xl bg-gradient-to-br from-pink-50 via-rose-50 to-amber-50 border border-pink-200 mt-6">
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                      <div>
-                        <span className="text-xs font-bold text-pink-700 uppercase tracking-wider">
-                          Recommended Price Per Serving
-                        </span>
-                        <div className="text-3xl font-black text-slate-900 mt-1">
-                          ${suggestedSlicePrice} <span className="text-xs font-normal text-slate-500">/ slice</span>
-                        </div>
-                        <p className="text-xs text-slate-500 mt-1">
-                          Contract Total: <strong className="text-slate-800">${baseTotal.toFixed(2)}</strong>
-                        </p>
-                      </div>
-
-                      <div className="sm:border-l sm:border-pink-200 sm:pl-6">
-                        <span className="text-xs font-bold text-amber-800 uppercase tracking-wider">
-                          Cost-Plus Margin Total
-                        </span>
-                        <div className="text-2xl font-bold text-amber-900 mt-1">
-                          ${costBasedTotal}
-                        </div>
-                        <span className="text-[11px] text-slate-500">
-                          Covers raw goods, {calcHours}h baking time + {calcProfitMargin}% profit
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
+            {/* Tasting Box & Client Orders Hub */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               {/* Tasting Box Simulator */}
-              <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
+              <div className="lg:col-span-6 bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
                 <div className="flex items-center gap-3 border-b border-slate-100 pb-4 mb-4">
                   <span className="text-3xl">🎁</span>
                   <div>
@@ -972,102 +841,101 @@ function HomePage() {
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Orders Management */}
-            <div className="lg:col-span-5 space-y-6">
-              <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-sm">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-2xl">📝</span>
-                  <h3 className="font-bold text-slate-900 text-base">Log New Wedding Booking</h3>
-                </div>
-
-                <form onSubmit={handleAddOrder} className="space-y-3">
-                  <div>
-                    <input
-                      type="text"
-                      placeholder="Couple's Names (e.g., Sarah & Mike)"
-                      value={newClientName}
-                      onChange={(e) => setNewClientName(e.target.value)}
-                      className="w-full text-xs sm:text-sm p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
-                      required
-                    />
+              {/* Orders Quick Logger */}
+              <div className="lg:col-span-6 space-y-6">
+                <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-2xl">📝</span>
+                    <h3 className="font-bold text-slate-900 text-base">Quick Log Client Booking</h3>
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <select
-                      value={newOrderRecipe}
-                      onChange={(e) => setNewOrderRecipe(e.target.value)}
-                      className="text-xs p-2 bg-slate-50 border border-slate-200 rounded-xl"
+
+                  <form onSubmit={handleAddOrder} className="space-y-3">
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Couple's Names (e.g., Sarah & Mike)"
+                        value={newClientName}
+                        onChange={(e) => setNewClientName(e.target.value)}
+                        className="w-full text-xs sm:text-sm p-2.5 bg-slate-50 border border-slate-200 rounded-xl"
+                        required
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <select
+                        value={newOrderRecipe}
+                        onChange={(e) => setNewOrderRecipe(e.target.value)}
+                        className="text-xs p-2 bg-slate-50 border border-slate-200 rounded-xl"
+                      >
+                        {recipes.map(r => (
+                          <option key={r.id} value={r.id}>{r.name}</option>
+                        ))}
+                      </select>
+                      <input
+                        type="number"
+                        placeholder="Servings"
+                        value={newOrderServings}
+                        onChange={(e) => setNewOrderServings(Number(e.target.value))}
+                        className="text-xs p-2 bg-slate-50 border border-slate-200 rounded-xl"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <input
+                        type="date"
+                        value={newOrderDate}
+                        onChange={(e) => setNewOrderDate(e.target.value)}
+                        className="text-xs p-2 bg-slate-50 border border-slate-200 rounded-xl"
+                      />
+                      <input
+                        type="number"
+                        placeholder="Price ($)"
+                        value={newOrderPrice}
+                        onChange={(e) => setNewOrderPrice(Number(e.target.value))}
+                        className="text-xs p-2 bg-slate-50 border border-slate-200 rounded-xl"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs transition"
                     >
-                      {recipes.map(r => (
-                        <option key={r.id} value={r.id}>{r.name}</option>
-                      ))}
-                    </select>
-                    <input
-                      type="number"
-                      placeholder="Servings"
-                      value={newOrderServings}
-                      onChange={(e) => setNewOrderServings(Number(e.target.value))}
-                      className="text-xs p-2 bg-slate-50 border border-slate-200 rounded-xl"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <input
-                      type="date"
-                      value={newOrderDate}
-                      onChange={(e) => setNewOrderDate(e.target.value)}
-                      className="text-xs p-2 bg-slate-50 border border-slate-200 rounded-xl"
-                    />
-                    <input
-                      type="number"
-                      placeholder="Price ($)"
-                      value={newOrderPrice}
-                      onChange={(e) => setNewOrderPrice(Number(e.target.value))}
-                      className="text-xs p-2 bg-slate-50 border border-slate-200 rounded-xl"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs transition"
-                  >
-                    Save Booking (+30 XP)
-                  </button>
-                </form>
-              </div>
-
-              {/* Order List */}
-              <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-sm">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                    <span>📦</span> Active Client Orders ({orders.length})
-                  </h3>
-                </div>
-
-                <div className="space-y-3">
-                  {orders.length === 0 ? (
-                    <p className="text-xs text-slate-400 text-center py-6">
-                      No client bookings logged yet. Add your first booking above!
-                    </p>
-                  ) : (
-                    orders.map(ord => (
-                      <div key={ord.id} className="p-3 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between">
-                        <div>
-                          <div className="font-bold text-xs text-slate-800">{ord.clientName}</div>
-                          <div className="text-[11px] text-slate-500">{ord.recipeName} • {ord.servings} slices</div>
-                          <div className="text-[10px] text-slate-400 mt-0.5">📅 {ord.date}</div>
-                        </div>
-                        <div className="text-right">
-                          <div className="font-black text-sm text-pink-600">${ord.price}</div>
-                          <span className="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 mt-1">
-                            {ord.status}
-                          </span>
-                        </div>
-                      </div>
-                    ))
-                  )}
+                      Save Booking (+30 XP)
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>
+
+            {/* Order List Table */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-sm">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
+                  <span>📦</span> Active Client Orders & Bookings ({orders.length})
+                </h3>
+              </div>
+
+              <div className="space-y-3">
+                {orders.length === 0 ? (
+                  <p className="text-xs text-slate-400 text-center py-6">
+                    No client bookings logged yet. Add your first booking above!
+                  </p>
+                ) : (
+                  orders.map(ord => (
+                    <div key={ord.id} className="p-3.5 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between">
+                      <div>
+                        <div className="font-bold text-xs sm:text-sm text-slate-800">{ord.clientName}</div>
+                        <div className="text-[11px] text-slate-500">{ord.recipeName} • {ord.servings} slices</div>
+                        <div className="text-[10px] text-slate-400 mt-0.5">📅 {ord.date}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-black text-sm text-pink-600">${ord.price}</div>
+                        <span className="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 mt-1">
+                          {ord.status}
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
           </div>
         )}
 
